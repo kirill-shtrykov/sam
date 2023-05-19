@@ -107,6 +107,20 @@ func registerPage(p *Page, baseURL string) {
 	http.HandleFunc(filepath.Join(baseURL, strings.Replace(p.URI(), p.Name(), lowerName, -1)), p.Handler)
 }
 
+func rootHandler(w http.ResponseWriter, r *http.Request) {
+	staticDir := filepath.Join(dir, "static")
+	if r.URL.Path == "/" {
+		http.Redirect(w, r, "/Home", http.StatusMovedPermanently)
+		return
+	}
+	if _, err := os.Stat(staticDir); err == nil && r.URL.Path != "/" {
+		fs := http.FileServer(http.Dir(staticDir))
+		fs.ServeHTTP(w, r)
+		return
+	}
+	http.NotFoundHandler().ServeHTTP(w, r)
+}
+
 func init() {
 	flag.StringVar(&addr, "addr", lookupEnvOrString("SAM_ADDR", "127.0.0.1:6250"), "address to listen")
 	flag.StringVar(&dir, "dir", lookupEnvOrString("SAM_DIR", "./"), "root directory")
@@ -123,6 +137,7 @@ func main() {
 		}
 		dir = filepath.Join(home, dir[2:])
 	}
+	http.HandleFunc("/", rootHandler)
 	log.Printf("Reading directory %s...", dir)
 	pages := readDir(dir)
 	log.Printf("Found %d pages", len(pages))
