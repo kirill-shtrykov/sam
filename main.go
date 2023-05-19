@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -14,13 +15,19 @@ import (
 )
 
 var (
-	addr string
-	dir  string
-	base string
+	addr            string
+	dir             string
+	base            string
+	defaultTemplate bool = true
 )
 
 type Page struct {
 	filePath string
+}
+
+type Data struct {
+	Content template.HTML
+	Title   string
 }
 
 // Returns page name - filename without .md extension
@@ -65,7 +72,19 @@ func (p *Page) HTML() []byte {
 
 // Returns HTTP Handler
 func (p *Page) Handler(w http.ResponseWriter, r *http.Request) {
-	w.Write(p.HTML())
+	data := Data{Content: template.HTML(p.HTML()), Title: p.Name()}
+	tpl, err := template.ParseFiles("templates/index.html", "assets/images/circle-half-stroke-solid.svg")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = tpl.Execute(w, data)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (p *Page) Redirect(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, p.URI(), http.StatusMovedPermanently)
 }
 
 func lookupEnvOrString(key string, defaultVal string) string {
@@ -104,7 +123,7 @@ func readDir(directory string) []*Page {
 func registerPage(p *Page, baseURL string) {
 	lowerName := strings.ToLower(p.Name())
 	http.HandleFunc(filepath.Join(baseURL, p.URI()), p.Handler)
-	http.HandleFunc(filepath.Join(baseURL, strings.Replace(p.URI(), p.Name(), lowerName, -1)), p.Handler)
+	http.HandleFunc(filepath.Join(baseURL, strings.Replace(p.URI(), p.Name(), lowerName, -1)), p.Redirect)
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -119,6 +138,16 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.NotFoundHandler().ServeHTTP(w, r)
+}
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	fileBytes, err := os.ReadFile("assets/images/w.ico")
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Write(fileBytes)
 }
 
 func init() {
@@ -138,7 +167,14 @@ func main() {
 		dir = filepath.Join(home, dir[2:])
 	}
 	http.HandleFunc("/", rootHandler)
+	http.HandleFunc("/favicon.ico", faviconHandler)
 	log.Printf("Reading directory %s...", dir)
+	if _, err := os.Stat(filepath.Join(dir, "index.html")); err == nil {
+		log.Println("Custom template found")
+		defaultTemplate = false
+	} else {
+		http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
+	}
 	pages := readDir(dir)
 	log.Printf("Found %d pages", len(pages))
 	log.Println("Registering pages...")

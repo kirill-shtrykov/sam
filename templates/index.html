@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="h-100" lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>{{ .Title }} - Wiki</title>
+    <link rel="icon" href="/favicon.ico" sizes="any"><!-- 32×32 -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body class="d-flex flex-column h-100">
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a href="/" class="navbar-brand">Wiki</a>
+                <div class="collapse navbar-collapse" id="navbarsExample09">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/Home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#">History</a>
+                        </li>
+                    </ul>
+                    <form role="search">
+                        <input class="form-control" disabled type="search" placeholder="Search" aria-label="Search">
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="mt-3">
+        <div class="container">
+            <div id="content">
+                {{ .Content }}
+            </div>
+        </div>
+    </main>
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div class="col-md-4 text-center text-md-start">
+                    <span>
+                        Powered by
+                        <a target="_blank" href="https://github.com/kirill-shtrykov/sam">Sam</a>
+                    </span>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <a id="dark-mode-toggle" class="btn btn-switch colorscheme-toggle">
+                        {{ template "circle-half-stroke-solid.svg" }}
+                    </a>
+                    <a target="_blank" href="https://shtrykov.com">
+                        <img src="https://shtrykov.com/images/logo-36.png" alt="Created by Kirill Shtrykov"
+                            title="Created by Kirill Shtrykov"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+
+</html>

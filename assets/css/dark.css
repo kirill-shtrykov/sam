@@ -1,0 +1,11 @@
+[data-theme='dark'] {
+    /* dark.css */
+    --font-color: rgba(255, 255, 255, 0.9);
+    --bg-color: rgba(0, 0, 0, 0.9);
+
+    --navbar-color: rgba(0, 0, 0, 0.55);
+    --navbar-disabled-color: rgba(255, 255, 255, 0.25);
+    --navbar-brand-color: #fff;
+
+    --link-color: #3eb0ef;
+}
