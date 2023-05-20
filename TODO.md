@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Redirects
+- [x] Redirects
 - [ ] Search
 - [ ] Search bar autocompletion
 - [ ] History

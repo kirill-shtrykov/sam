@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
@@ -174,6 +176,26 @@ func main() {
 		defaultTemplate = false
 	} else {
 		http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
+	}
+	redirectsFile := filepath.Join(dir, "redirects.conf")
+	if _, err := os.Stat(redirectsFile); err == nil {
+		log.Println("Redirects config found")
+		fp, err := os.Open(redirectsFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		redirects := map[string]string{}
+		err = yaml.NewDecoder(fp).Decode(redirects)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for src, dst := range redirects {
+			log.Printf("Registering redirect %s -> %s", filepath.Join(base, src), filepath.Join(base, dst))
+			http.HandleFunc(filepath.Join(base, src), func(w http.ResponseWriter, r *http.Request) {
+				http.Redirect(w, r, filepath.Join(base, dst), http.StatusMovedPermanently)
+			})
+		}
 	}
 	pages := readDir(dir)
 	log.Printf("Found %d pages", len(pages))
