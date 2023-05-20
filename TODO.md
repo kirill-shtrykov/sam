@@ -10,6 +10,6 @@
     - [ ] Check lists
 - [ ] Extendable macroses
 - [ ] Update `README.md`
-- [ ] Create `CAHNGELOG.md`
+- [x] Create `CAHNGELOG.md`
 - [ ] Tamplates/Magic Words
 - [ ] Mermaid support
