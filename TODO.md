@@ -1,13 +1,15 @@
 # TODO
 
-- Search
-- Search bar autocompletion
-- History
-- Macroses
-    - [[TOC]]
-    - Most recent article
-- Extendable macroses
-- Update `README.md`
-- Create `CAHNGELOG.md`
-- Tamplates/Magic Words
-
+- [ ] Redirects
+- [ ] Search
+- [ ] Search bar autocompletion
+- [ ] History
+- [ ] Macros
+    - [ ] [[TOC]]
+    - [ ] Most recent article
+    - [ ] Check lists
+- [ ] Extendable macroses
+- [ ] Update `README.md`
+- [ ] Create `CAHNGELOG.md`
+- [ ] Tamplates/Magic Words
+- [ ] Mermaid support
