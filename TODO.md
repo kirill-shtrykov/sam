@@ -4,12 +4,13 @@
 - [ ] Search
 - [ ] Search bar autocompletion
 - [ ] History
-- [ ] Macros
-    - [ ] [[TOC]]
-    - [ ] Most recent article
-    - [ ] Check lists
-- [ ] Extendable macroses
+- [x] Wikilinks
+- [ ] Most recent article
+- [x] Check lists
 - [ ] Update `README.md`
 - [x] Create `CAHNGELOG.md`
 - [ ] Tamplates/Magic Words
-- [ ] Mermaid support
+- [x] Mermaid support
+- [x] Emoji support
+- [ ] Draft mode
+- [ ] Tags

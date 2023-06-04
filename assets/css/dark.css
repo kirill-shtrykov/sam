@@ -1,11 +1,77 @@
 [data-theme='dark'] {
     /* dark.css */
-    --font-color: rgba(255, 255, 255, 0.9);
-    --bg-color: rgba(0, 0, 0, 0.9);
+    --font-color: #eee;
+    --bg-color: #3c3f41;
 
     --navbar-color: rgba(0, 0, 0, 0.55);
     --navbar-disabled-color: rgba(255, 255, 255, 0.25);
     --navbar-brand-color: #fff;
 
     --link-color: #3eb0ef;
+
+    --ch-font-color: #d4d4d4;
+    --ch-background-color: #1e1e1e;
+    --ch-error-color: #f85149;
+    /* --ch-other-color: #fff ; */
+    --ch-keyword-color: #C586C0;
+    --ch-keyword-constant-color: #CE9178;
+    --ch-keyword-declaration-color: #569cd6;
+    --ch-keyword-namespace-color: #569cd6;
+    --ch-keyword-pseudo-color: #569cd6;
+    /* --ch-keyword-reserved-color: #fff ; */
+    --ch-keyword-type-color: #4EC9B0;
+    /* --ch-name-color: #fff ; */
+    --ch-name-attribute-color: #9CDCFE;
+    --ch-name-builtin-color: #DCDCAA;
+    /* --ch-name-builtin-pseudo-color: #fff ; */
+    --ch-name-class-color: #4EC9B0;
+    --ch-name-constant-color: #4EC9B0;
+    --ch-name-decorator-color: #DCDCAA ;
+    --ch-name-entity-color: #569cd6;
+    --ch-name-exception-color: #4EC9B0;
+    --ch-name-function-color: #DCDCAA ;
+    --ch-name-function-magic-color: #DCDCAA;
+    /* --ch-name-property-color: #fff ; */
+    --ch-name-label-color: #569cd6;
+    /* --ch-name-namespace-color: #fff ; */
+    --ch-name-other-color: #569cd6 ;
+    --ch-name-tag-color: #569cd6;
+    --ch-name-variable-color: #9CDCFE;
+    /* --ch-name-variable-class-color: #fff ; */
+    --ch-name-variable-global-color: #9CDCFE;
+    --ch-name-variable-instance-color: #9CDCFE;
+    --ch-name-variable-magic-color: #9CDCFE;
+    --ch-literal-color: #CE9178;
+    /* --ch-literal-date-color: #fff ; */
+    --ch-string-color: #CE9178 ;
+    --ch-string-affix-color: #569cd6;
+    --ch-string-backtick-color: #CE9178;
+    --ch-string-char-color: #CE9178 ;
+    /* --ch-string-delimiter-color: #fff ; */
+    --ch-string-doc-color: #CE9178;
+    --ch-string-double-color: #CE9178 ;
+    --ch-string-escape-color: #d7ba7d;
+    /* --ch-string-heredoc-color: #fff ; */
+    --ch-string-interpol-color: #9CDCFE;
+    /* --ch-string-other-color: #fff ; */
+    --ch-string-regex-color: #CE9178 ;
+    --ch-string-single-color: #CE9178 ;
+    /* --ch-string-symbol-color: #fff ; */
+    --ch-number-color: #b5cea8;
+    --ch-number-bin-color: #b5cea8;
+    --ch-number-float-color: #b5cea8;
+    --ch-number-hex-color: #CE9178;
+    --ch-number-integer-color: #b5cea8;
+    --ch-number-integer-long-color: #b5cea8;
+    --ch-number-oct-color: #b5cea8;
+    /* --ch-operator-color: #fff ; */
+    --ch-operator-word-color: #4FC1FF;
+    --ch-punctuation-color: #fdc908;
+    --ch-comment-color: #6A9955;
+    --ch-comment-hashbang-color: #6A9955;
+    --ch-comment-multiline-color: #6A9955;
+    --ch-comment-preproc-color: #C586C0;
+    --ch-comment-preproc-file-color: #CE9178;
+    --ch-comment-single-color: #6A9955;
+    --ch-comment-special-color: #6A9955;
 }

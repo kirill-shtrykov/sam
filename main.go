@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"html/template"
 	"log"
@@ -11,9 +12,16 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/gomarkdown/markdown"
-	"github.com/gomarkdown/markdown/html"
-	"github.com/gomarkdown/markdown/parser"
+	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+	"github.com/yuin/goldmark"
+	emoji "github.com/yuin/goldmark-emoji"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
+	meta "github.com/yuin/goldmark-meta"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
+	"go.abhg.dev/goldmark/mermaid"
+	"go.abhg.dev/goldmark/wikilink"
 )
 
 var (
@@ -25,11 +33,28 @@ var (
 
 type Page struct {
 	filePath string
+	meta     map[string]interface{}
 }
 
 type Data struct {
 	Content template.HTML
 	Title   string
+}
+
+type wikilinkResolver struct{}
+
+func (wikilinkResolver) ResolveWikilink(n *wikilink.Node) ([]byte, error) {
+	_hash := []byte{'#'}
+	dest := make([]byte, len(n.Target)+len(_hash)+len(n.Fragment))
+	var i int
+	if len(n.Target) > 0 {
+		i += copy(dest, n.Target)
+	}
+	if len(n.Fragment) > 0 {
+		i += copy(dest[i:], _hash)
+		i += copy(dest[i:], n.Fragment)
+	}
+	return dest[:i], nil
 }
 
 // Returns page name - filename without .md extension
@@ -59,17 +84,37 @@ func (p *Page) Markdown() []byte {
 
 // Returns parsed HTML from Markdown data
 func (p *Page) HTML() []byte {
-	// create markdown parser with extensions
-	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
-	par := parser.NewWithExtensions(extensions)
-	md := p.Markdown()
-	doc := par.Parse(md)
-	// create HTML renderer with extensions
-	htmlFlags := html.CommonFlags | html.HrefTargetBlank
-	opts := html.RendererOptions{Flags: htmlFlags}
-	renderer := html.NewRenderer(opts)
-
-	return markdown.Render(doc, renderer)
+	var buf bytes.Buffer
+	context := parser.NewContext()
+	// catppuccinStyle := highlighting.
+	md := goldmark.New(
+		goldmark.WithExtensions(
+			extension.GFM,
+			highlighting.NewHighlighting(
+				highlighting.WithFormatOptions(
+					chromahtml.WithClasses(true),
+				),
+			),
+			emoji.Emoji,
+			meta.Meta,
+			&mermaid.Extender{},
+			&wikilink.Extender{
+				Resolver: wikilinkResolver{},
+			},
+		),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+		goldmark.WithRendererOptions(
+			html.WithHardWraps(),
+			html.WithXHTML(),
+		),
+	)
+	if err := md.Convert(p.Markdown(), &buf, parser.WithContext(context)); err != nil {
+		log.Fatal(err)
+	}
+	p.meta = meta.Get(context)
+	return buf.Bytes()
 }
 
 // Returns HTTP Handler

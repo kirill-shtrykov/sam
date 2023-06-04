@@ -1,5 +1,14 @@
 # Sam
 
+## 0.0.3-alpha
+- Change Markdown library
+- Add code highlihgtin support
+- Add emoji support
+- Add wikilinks support
+- Add mermaid support
+- Add check lists support
+- Add metadata support
+
 ## 0.0.2-alpha
 Add redirects support
 
