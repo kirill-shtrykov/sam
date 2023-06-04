@@ -65,7 +65,6 @@ func (p *Page) Name() string {
 
 /*
 Returns URI for page
-
 	ex.: `/home/wiki/page.md` if `/home/wiki` is `dir` will return `/`
 */
 func (p *Page) URI() string {
@@ -73,12 +72,15 @@ func (p *Page) URI() string {
 	return p.filePath[len(dir) : len(p.filePath)-len(filepath.Ext(fileName))]
 }
 
-// Returns markdown data
-func (p *Page) Markdown() []byte {
-	b, err := os.ReadFile(p.filePath)
+func checkErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+// Returns markdown data
+func (p *Page) Markdown() []byte {
+	b, err := os.ReadFile(p.filePath)
+	checkErr(err)
 	return b
 }
 
@@ -110,9 +112,8 @@ func (p *Page) HTML() []byte {
 			html.WithXHTML(),
 		),
 	)
-	if err := md.Convert(p.Markdown(), &buf, parser.WithContext(context)); err != nil {
-		log.Fatal(err)
-	}
+	err := md.Convert(p.Markdown(), &buf, parser.WithContext(context));
+	checkErr(err)
 	p.meta = meta.Get(context)
 	return buf.Bytes()
 }
@@ -121,13 +122,9 @@ func (p *Page) HTML() []byte {
 func (p *Page) Handler(w http.ResponseWriter, r *http.Request) {
 	data := Data{Content: template.HTML(p.HTML()), Title: p.Name()}
 	tpl, err := template.ParseFiles("templates/index.html", "assets/images/circle-half-stroke-solid.svg")
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkErr(err)
 	err = tpl.Execute(w, data)
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkErr(err)
 }
 
 func (p *Page) Redirect(w http.ResponseWriter, r *http.Request) {
@@ -151,9 +148,7 @@ func logRequest(handler http.Handler) http.Handler {
 func readDir(directory string) []*Page {
 	var result []*Page
 	files, err := os.ReadDir(directory)
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkErr(err)
 
 	for _, file := range files {
 		if file.IsDir() {
@@ -189,9 +184,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	fileBytes, err := os.ReadFile("assets/images/w.ico")
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Write(fileBytes)
@@ -208,9 +201,7 @@ func main() {
 	log.Println("Starting Sam...")
 	if strings.HasPrefix(dir, "~/") {
 		home, err := os.UserHomeDir()
-		if err != nil {
-			log.Fatal(err)
-		}
+		checkErr(err)
 		dir = filepath.Join(home, dir[2:])
 	}
 	http.HandleFunc("/", rootHandler)
@@ -226,14 +217,10 @@ func main() {
 	if _, err := os.Stat(redirectsFile); err == nil {
 		log.Println("Redirects config found")
 		fp, err := os.Open(redirectsFile)
-		if err != nil {
-			log.Fatal(err)
-		}
+		checkErr(err)
 		redirects := map[string]string{}
 		err = yaml.NewDecoder(fp).Decode(redirects)
-		if err != nil {
-			log.Fatal(err)
-		}
+		checkErr(err)
 
 		for src, dst := range redirects {
 			log.Printf("Registering redirect %s -> %s", filepath.Join(base, src), filepath.Join(base, dst))
