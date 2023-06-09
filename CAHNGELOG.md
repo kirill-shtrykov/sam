@@ -1,5 +1,9 @@
 # Sam
 
+## 0.0.4-beta
+- Add page history
+- Update error handling 
+
 ## 0.0.3-alpha
 - Change Markdown library
 - Add code highlihgtin support

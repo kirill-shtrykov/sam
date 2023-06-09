@@ -7,6 +7,7 @@ body {
 }
 
 a,
+table,
 .nav-link {
     color: var(--font-color) !important;
 }
@@ -58,6 +59,11 @@ a:hover,
 
 .btn-switch svg:hover {
     fill: var(--link-color)
+}
+
+.gravatar {
+    width: 80px;
+    height: 80px;
 }
 
 

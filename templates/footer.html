@@ -1,0 +1,20 @@
+{{ define "footer" }}
+<div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <div class="col-md-4 text-center text-md-start">
+            <span>
+                Powered by
+                <a target="_blank" href="https://github.com/kirill-shtrykov/sam">Sam</a>
+            </span>
+        </div>
+        <div class="col-md-4 text-center text-md-end">
+            <a id="dark-mode-toggle" class="btn btn-switch colorscheme-toggle">
+                {{ template "circle-half-stroke-solid.svg" }}
+            </a>
+            <a target="_blank" href="https://shtrykov.com">
+                <img src="https://shtrykov.com/images/logo-36.png" alt="Created by Kirill Shtrykov"
+                    title="Created by Kirill Shtrykov"></a>
+        </div>
+    </div>
+</div>
+{{ end }}
