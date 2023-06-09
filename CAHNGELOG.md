@@ -3,6 +3,7 @@
 ## 0.0.4-beta
 - Add page history
 - Update error handling 
+- Update CSS styles
 
 ## 0.0.3-alpha
 - Change Markdown library

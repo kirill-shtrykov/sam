@@ -3,14 +3,14 @@
     --font-color: rgba(0, 0, 0, 0.9);
     --bg-color: rgba(255, 255, 255, 0.9);
 
-    --navbar-color: rgba(0, 0, 0, 0.25);
+    --navbar-background-color: rgba(0, 0, 0, 0.25);
     --navbar-disabled-color: rgba(0, 0, 0, 0.25);
     --navbar-brand-color: #000;
 
     --link-color: #1d60a3;
 
-    --ch-font-color: #3b3b3b;
-    --ch-background-color: #fff;
+    --ch-font-color: rgba(0, 0, 0, 0.9);
+    --ch-background-color: rgba(0, 0, 0, 0.1);
     --ch-error-color: #f85149;
     /* --ch-other-color: #fff ; */
     --ch-keyword-color: #AF00DB;
