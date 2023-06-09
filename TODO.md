@@ -3,7 +3,7 @@
 - [x] Redirects
 - [ ] Search
 - [ ] Search bar autocompletion
-- [ ] History
+- [x] History
 - [x] Wikilinks
 - [ ] Most recent article
 - [x] Check lists
