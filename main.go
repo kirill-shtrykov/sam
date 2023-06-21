@@ -20,12 +20,9 @@ func lookupEnvOrString(key string, defaultVal string) string {
 
 func main() {
 	var (
-		// Address to listen. Default to "127.0.0.1:6250"
-		addr string
-		// Wiki root directory. Default to "./"
-		dir string
-		// HTTP base URL. Default to "/"
-		base string
+		addr string // Address to listen. Default to "127.0.0.1:6250"
+		dir  string // Wiki root directory. Default to "./"
+		base string // HTTP base URL. Default to "/"
 	)
 
 	flag.StringVar(&addr, "addr", lookupEnvOrString("SAM_ADDR", "127.0.0.1:6250"), "address to listen")
