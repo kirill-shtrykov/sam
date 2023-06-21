@@ -13,4 +13,5 @@
 - [x] Mermaid support
 - [x] Emoji support
 - [ ] Draft mode
-- [ ] Tags
+- [x] Tags
+- [ ] Custom HTML templates

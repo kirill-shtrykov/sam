@@ -2,6 +2,7 @@
 
 ## 0.0.4-beta
 - Add page history
+- Add tags support
 - Update error handling 
 - Update CSS styles
 
