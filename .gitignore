@@ -23,3 +23,6 @@ go.work
 # VS Code
 .vscode/
 __debug_bin
+
+# Build
+build/
