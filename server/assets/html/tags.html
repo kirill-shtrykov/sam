@@ -1,0 +1,7 @@
+{{ define "content" }}
+<h1>{{.Title}}</h1>
+<ul>{{range .Links}}
+    <li><a href="{{.URI}}">{{.Name}}</a></li>
+    {{end}}
+</ul>
+{{ end }}

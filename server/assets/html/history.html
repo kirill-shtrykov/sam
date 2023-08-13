@@ -1,0 +1,15 @@
+{{ define "content" }}
+<h1>{{.Title}}</h1>
+<table class="table">
+    <tbody>
+        {{range .History}}
+        <tr>
+            <td><img class="gravatar" src="https://www.gravatar.com/avatar/{{.EmailHash}}" /></td>
+            <td><span class="px">{{.Author.Name}}</span></td>
+            <td><span class="px">{{.Message}}</span></td>
+            <td><span class="px">{{.Author.When.Format "02 Jan 06 15:04 MST"}}</span></td>
+        </tr>
+        {{end}}
+    </tbody>
+</table>
+{{ end }}

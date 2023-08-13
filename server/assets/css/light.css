@@ -1,10 +1,11 @@
 :root {
     /* light.css */
     --font-color: rgba(0, 0, 0, 0.9);
+    --anchor-color: rgba(0, 0, 0, 0.25);
     --bg-color: rgba(255, 255, 255, 0.9);
 
     --navbar-background-color: rgba(0, 0, 0, 0.25);
-    --navbar-disabled-color: rgba(0, 0, 0, 0.25);
+    --navbar-disabled-color: rgba(0, 0, 0, 0.15);
     --navbar-brand-color: #000;
 
     --link-color: #1d60a3;

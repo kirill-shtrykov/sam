@@ -18,6 +18,8 @@ require (
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/src-d/gcfg v1.4.0 // indirect
 	github.com/xanzy/ssh-agent v0.2.1 // indirect
+	go.abhg.dev/goldmark/anchor v0.1.1 // indirect
+	go.abhg.dev/goldmark/toc v0.4.0 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect

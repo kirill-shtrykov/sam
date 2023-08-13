@@ -15,6 +15,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"embed"
+
 	"gopkg.in/yaml.v3"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
@@ -25,11 +27,17 @@ import (
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
+	"go.abhg.dev/goldmark/anchor"
 	"go.abhg.dev/goldmark/mermaid"
 	"go.abhg.dev/goldmark/wikilink"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
+
+// Assets
+//
+//go:embed assets/*
+var assets embed.FS
 
 // ErrMetaNotFound is returned by ReadMeta when provided file
 // doesn't contains metadata block
@@ -38,8 +46,8 @@ var ErrMetaNotFound = errors.New("Metadata not found")
 // Returns default templates for `http/templates` in HTTP handlers
 func DefaultTemplates() []string {
 	return []string{
-		"templates/index.html",
-		"templates/footer.html",
+		"assets/html/index.html",
+		"assets/html/footer.html",
 		"assets/images/circle-half-stroke-solid.svg",
 	}
 }
@@ -111,6 +119,8 @@ func (p *Page) HTML() ([]byte, error) {
 	gm := goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
+			extension.DefinitionList,
+			extension.Footnote,
 			highlighting.NewHighlighting(
 				highlighting.WithFormatOptions(
 					chromahtml.WithClasses(true),
@@ -119,6 +129,9 @@ func (p *Page) HTML() ([]byte, error) {
 			emoji.Emoji,
 			meta.Meta,
 			&mermaid.Extender{},
+			&anchor.Extender{
+				Texter: anchor.Text("🔗"),
+			},
 			&wikilink.Extender{
 				Resolver: wikilinkResolver{},
 			},
@@ -159,10 +172,10 @@ func (p *Page) Handler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Internal server error", 500)
 			return
 		}
-		tpl = "templates/history.html"
+		tpl = "assets/html/history.html"
 		data = Data{Title: "History - " + p.Name, History: history}
 	} else {
-		tpl = "templates/article.html"
+		tpl = "assets/html/article.html"
 		html, err := p.HTML()
 		if err != nil {
 			log.Printf("error read HTML for %s: %v", p.Name, err)
@@ -171,7 +184,7 @@ func (p *Page) Handler(w http.ResponseWriter, r *http.Request) {
 		}
 		data = Data{Content: template.HTML(html), Title: p.Name}
 	}
-	t, err := template.ParseFiles(append(DefaultTemplates(), tpl)...)
+	t, err := template.ParseFS(assets, append(DefaultTemplates(), tpl)...)
 	if err != nil {
 		log.Printf("error parse templates for %s: %v", p.Name, err)
 		http.Error(w, "Internal server error", 500)
@@ -219,7 +232,7 @@ func (h *RootHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 // Handler for favicon.ico
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	fileBytes, err := os.ReadFile("assets/images/w.ico")
+	fileBytes, err := assets.ReadFile("assets/images/w.ico")
 	if err != nil {
 		log.Printf("error reading favicon file: %v", err)
 		http.Error(w, "Internal server error", 500)
@@ -274,10 +287,10 @@ func (t *Tag) Handler(w http.ResponseWriter, r *http.Request) {
 		Title: t.Name,
 		Links: *t.Links(),
 	}
-	tpl, err := template.ParseFiles(
-		"templates/index.html",
-		"templates/footer.html",
-		"templates/tags.html",
+	tpl, err := template.ParseFS(assets,
+		"assets/html/index.html",
+		"assets/html/footer.html",
+		"assets/html/tags.html",
 		"assets/images/circle-half-stroke-solid.svg")
 	if err != nil {
 		log.Printf("error parse templates for %s: %v", t.Name, err)
@@ -341,10 +354,10 @@ func (t *Tags) Handler(w http.ResponseWriter, r *http.Request) {
 		Title: "Tags",
 		Links: *t.Links(),
 	}
-	tpl, err := template.ParseFiles(
-		"templates/index.html",
-		"templates/footer.html",
-		"templates/tags.html",
+	tpl, err := template.ParseFS(assets,
+		"assets/html/index.html",
+		"assets/html/footer.html",
+		"assets/html/tags.html",
 		"assets/images/circle-half-stroke-solid.svg")
 	if err != nil {
 		log.Printf("error parse templates for tags: %v", err)
@@ -445,9 +458,10 @@ func initWiki(dir string, base string) error {
 	log.Println("Register favicon handler")
 	http.HandleFunc("/favicon.ico", faviconHandler)
 
-	log.Printf("Reading directory %s...", dir)
 	log.Println("Register assets handler")
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
+	http.Handle("/assets/", http.FileServer(http.FS(assets)))
+
+	log.Printf("Reading directory %s...", dir)
 
 	// Try to read redirects config
 	rc := filepath.Join(dir, "redirects.conf")
