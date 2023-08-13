@@ -51,6 +51,7 @@ a,
 .anchor {
     color: var(--anchor-color) !important;
     text-decoration: none;
+    font-size: 65%;
 }
 
 h1:after {
