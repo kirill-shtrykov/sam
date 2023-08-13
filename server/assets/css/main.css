@@ -99,7 +99,7 @@ a:hover,
     margin-right: 1rem;
 }
 
-.nav-link {
+.nav-link, footnote-ref {
     text-decoration: none;
 }
 
